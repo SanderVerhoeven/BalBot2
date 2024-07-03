@@ -8,7 +8,7 @@ import datetime
 
 async def run_main(refresh_rate):
     players_info = get_players_info()
-    champion_list = get_champion_list()
+    champion_list = get_champion_list_with_icons()
     
     if not players_info:
         print("No players found in players.json, quitting...")
@@ -32,8 +32,9 @@ async def run_main(refresh_rate):
                 if not any(game_id == tup[1] for tup in ongoing_games):
                     print(f"{game_name}#{tag_line} is in a new live game! (Game ID: {game_id})")                                      
                     ongoing_games.append((puuid, game_id))
-                    champion_name = await get_champion_name(active_game, puuid, champion_list)                   
-                    await send_vote_message(game_id, f"{game_name}#{tag_line}", champion_name)         
+                    champion_name = await get_champion_name(active_game, puuid, champion_list)   
+                    game_mode = await get_game_mode(active_game)                
+                    await send_vote_message(game_id, f"{game_name}#{tag_line}", champion_name, game_mode)         
                 else:
                     #print(f"{game_name}#{tag_line} is currently in a game! (Game ID: {game_id})")
                     pass
